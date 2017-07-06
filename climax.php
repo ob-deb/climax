@@ -5,7 +5,7 @@
  */
 class phpTerminal
 {
-    private $error_delay         = 750000; // (0.5s)
+    private $error_delay         = 750000; // (0.75s)
     private $input_yn_error_msg  = "Tecla inválida, tente novamente...";
     private $input_key_error_msg = "Opção inválida, tente novamente...";
 
@@ -183,7 +183,7 @@ class phpTerminal
     }
 
     /**
-     * 22. Quebra de linha...
+     * Quebra de linha...
      */
     public function br() {
         echo PHP_EOL;
@@ -202,8 +202,6 @@ class phpTerminal
     public function color($text, $name, $bg = false, $bold = false) {
         #
     }
-
-    // Métodos de controle......................................................
 
     /**
      * Limpa a linha atual permitindo a sobrescrita...
@@ -245,7 +243,10 @@ class phpTerminal
         echo PHP_EOL;
         return strtolower($i);
     }
-
+    
+    /**
+     * Parser de mensagens de erro...
+     */
     private function parse_error_msg($show_error, $default_error_msg) {
         if ($show_error === true) {
             $this->show_error_msg($default_error_msg);
@@ -268,6 +269,9 @@ class phpTerminal
         $this->clear_line();
     }
 
+    /**
+     * Silencia a saída do terminal...
+     */
     private function stty_silent($status) {
         if ($status) {
             shell_exec('stty -echo -icanon');
