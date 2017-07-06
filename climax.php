@@ -3,7 +3,7 @@
  * Simples classe para facilitar o desenvolvimento
  * de scripts em PHP CLI...
  */
-class phpTerminal
+class phpCLImax
 {
     private $error_delay         = 750000; // (0.75s)
     private $input_yn_error_msg  = "Tecla inválida, tente novamente...";
