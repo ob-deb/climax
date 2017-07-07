@@ -3,9 +3,9 @@
  * Simples classe para facilitar o desenvolvimento
  * de scripts em PHP CLI...
  */
-class phpCLImax
+class phpTerminal
 {
-    private $error_delay         = 750000; // (0.75s)
+    private $error_delay         = 750000; // (0.5s)
     private $input_yn_error_msg  = "Tecla inválida, tente novamente...";
     private $input_key_error_msg = "Opção inválida, tente novamente...";
 
@@ -76,7 +76,7 @@ class phpCLImax
     public function input_any($msg) {
         $this->out($msg, false);
         $this->stty_silent(true);
-        $i = fgetc(STDIN);
+        fgetc(STDIN);
         $this->stty_silent(false);
         echo PHP_EOL;
     }
@@ -92,10 +92,26 @@ class phpCLImax
     }
 
     /**
-     * 06. Entrada em múltiplas linhas...
+     * Entrada de dados em linhas (retorna array com dados)...
      */
-    public function multiline($p = '~') {
-        #
+    public function multiline_data($labels, $msg = false) {
+        if ($msg !== false) {
+            $this->out($msg."\n", true);
+        }
+        $h = array();
+        foreach ($labels as $k => $v) {
+            while (true) {
+                $i = readline($v.": ");
+                if (trim($i) != '') {
+                    break;
+                } else {
+                    system('echo -n "\033[1A\r"');
+                }
+            }
+            $h[$v] = $i;
+        }
+        echo PHP_EOL;
+        return $h;
     }
 
     /**
@@ -183,7 +199,7 @@ class phpCLImax
     }
 
     /**
-     * Quebra de linha...
+     * 22. Quebra de linha...
      */
     public function br() {
         echo PHP_EOL;
@@ -202,6 +218,8 @@ class phpCLImax
     public function color($text, $name, $bg = false, $bold = false) {
         #
     }
+
+    // Métodos de controle......................................................
 
     /**
      * Limpa a linha atual permitindo a sobrescrita...
@@ -243,10 +261,7 @@ class phpCLImax
         echo PHP_EOL;
         return strtolower($i);
     }
-    
-    /**
-     * Parser de mensagens de erro...
-     */
+
     private function parse_error_msg($show_error, $default_error_msg) {
         if ($show_error === true) {
             $this->show_error_msg($default_error_msg);
@@ -269,9 +284,6 @@ class phpCLImax
         $this->clear_line();
     }
 
-    /**
-     * Silencia a saída do terminal...
-     */
     private function stty_silent($status) {
         if ($status) {
             shell_exec('stty -echo -icanon');
